@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Failure Logs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #121212; /* Dark background */
+            color: #e0e0e0; /* Light text */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color:rgb(0, 0, 0); /* Slightly lighter dark background */
+            color: #e0e0e0; /* Light text */
+        }
+        table, th, td {
+            border: 1px solid #00ffff; /* Cyan border */
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #222; /* Slightly lighter header background */
+        }
+        h1 {
+            text-align: center;
+            color: #00ffff; /* Cyan text */
+        }
+    </style>
+</head>
+<body>
+    <h1>Failure Logs</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Failure Details</th>
+                <th>Severity</th>
+                <th>Notification Method</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                <td>{{ log.timestamp }}</td>
+                <td>{{ log.error_message }}</td>
+                <td>{{ log.severity }}</td>
+                <td>
+                    {% if log.notification_method == "none" %}
+                        None
+                    {% else %}
+                        {{ log.notification_method|title }}
+                    {% endif %}
+                </td>
+                <!--<td>{{ log.notification_method|title }}</td>-->
+                <!--<td>
+                    {% if log.severity == "critical" %}
+                        Both (Email & SMS)
+                    {% else %}
+                        Email
+                    {% endif %}
+                </td> -->
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align: center;">No failure logs found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

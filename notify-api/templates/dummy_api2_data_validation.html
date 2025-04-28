@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dummy API 2 - Data Validation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #121212; /* Dark background */
+            color: #e0e0e0; /* Light text */
+        }
+        form {
+            max-width: 400px;
+            margin: auto;
+            background-color: #1e1e1e; /* Slightly lighter dark background */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #00ffff; /* Cyan color for labels */
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #00ffff; /* Cyan border */
+            border-radius: 5px;
+            background-color: #2c2c2c; /* Dark input background */
+            color: #e0e0e0; /* Light text */
+        }
+        button {
+            background-color: #00ffff; /* Cyan button */
+            color: #121212; /* Dark text */
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #00cccc; /* Slightly darker cyan */
+        }
+        #responseMessage {
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center; color: #00ffff;">Dummy API 2 - Data Validation</h1>
+    <form id="dataValidationForm">
+        <label for="field_value">Enter Something:</label>
+        <input type="text" id="field_value" name="field_value" required>
+
+        <button type="submit">Validate Data</button>
+    </form>
+
+    <div id="responseMessage" style="margin-top: 20px;"></div>
+
+    <script>
+        document.getElementById('dataValidationForm').addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    const field_value = document.getElementById('field_value').value.trim();
+    const responseMessage = document.getElementById('responseMessage');
+    responseMessage.textContent = "Validating data...";
+
+    try {
+        const response = await fetch('/dummy-apis/dummy-api-2/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ field_value }), // Send raw input to the backend
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            responseMessage.textContent = result.message;
+            responseMessage.style.color = "#00ff00"; // Green for success
+        } else {
+            responseMessage.textContent = result.error || "Failed to validate data.";
+            responseMessage.style.color = "#ff0000"; // Red for error
+        }
+    } catch (error) {
+        console.error("Error occurred:", error);
+        responseMessage.textContent = "An error occurred while validating the data.";
+        responseMessage.style.color = "#ff0000"; // Red for error
+    }
+});
+    </script>
+</body>
+</html>

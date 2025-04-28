@@ -1,0 +1,114 @@
+<!-- filepath: c:\Users\joelt\Development\notifier\notify-api\templates\manage_rules.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notify</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 150px;
+            background-color: #000; /* Black background */
+            color: #00ffff; /* Cyan text */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: #111; /* Dark table background */
+            color: #00ffff; /* Cyan text */
+        }
+        table, th, td {
+            border: 1px solid #00ffff; /* Cyan border */
+        }
+        th, td {
+            padding: 10px;
+            text-align: center; /* Center-align text */
+        }
+        th {
+            background-color: #222; /* Slightly lighter header background */
+        }
+        form {
+            max-width: 500px;
+            margin: auto;
+            background-color: #111; /* Dark form background */
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #00ffff; /* Cyan border */
+        }
+        input, select, button {
+            width: calc(100% - 20px); /* Adjust width for padding */
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: #000; /* Black input background */
+            color: #00ffff; /* Cyan text */
+            border: 1px solid #00ffff; /* Cyan border */
+            border-radius: 4px;
+        }
+        button {
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #00ffff; /* Cyan hover background */
+            color: #000; /* Black text */
+        }
+        h1 {
+            text-align: center;
+            color: #00ffff; /* Cyan text */
+        }
+    </style>
+</head>
+<body>
+    <h1>NotifierR</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>API Name</th>
+                <th>Notification Method</th>
+                <th>Max Notifications</th>
+                <th>Time Period (minutes)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rule in rules %}
+            <tr>
+                <td>{{ rule.api_name }}</td>
+                <td>{{ rule.notification_method }}</td>
+                <td>{{ rule.threshold }}</td>
+                <td>{{ rule.frequency }}</td>
+                <td>
+                    <form method="POST" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="rule_id" value="{{ rule.id }}">
+                        <button type="submit" name="delete_rule">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="api_name">API Name:</label>
+        <input type="text" id="api_name" name="api_name" required>
+
+        <label for="notification_method">Notification Method:</label>
+        <select id="notification_method" name="notification_method" required>
+            <option value="email">Email</option>
+            <option value="sms">SMS</option>
+            <option value="both">Both</option>
+        </select>
+
+        <label for="threshold">Max Notifications:</label>
+        <input type="number" id="threshold" name="threshold" min="1" value="1" required>
+
+        <label for="frequency">Time Period (minutes):</label>
+        <input type="number" id="frequency" name="frequency" min="1" value="60" required>
+
+        <button type="submit">Save Rule</button>
+    </form>
+</body>
+</html>

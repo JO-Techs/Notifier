@@ -1,0 +1,19 @@
+CHANGES
+
+
+generic views
+mixins
+function names should be more readable and understandable
+crud operations management, reduce db hit
+serializers
+moving endpoint from code, replacing with name, try calling with reverse
+each functionality should be maintained as different functions
+cut short views.py, create additional files like services, threshold 
+    and make views less crowded and call it there
+change api views use genric views
+    use delete like def post
+
+put evrything in a try catch exceptinons
+
+
+    your code is Uglyyyyyyyyyyyy...

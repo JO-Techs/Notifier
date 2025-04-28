@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notify API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #121212; /* Dark background */
+            color: #e0e0e0; /* Light text */
+        }
+        form {
+            max-width: 400px;
+            margin: auto;
+            background-color: #1e1e1e; /* Slightly lighter dark background */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #00ffff; /* Cyan color for labels */
+        }
+        input, select, textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #00ffff; /* Cyan border */
+            border-radius: 5px;
+            background-color: #2c2c2c; /* Dark input background */
+            color: #e0e0e0; /* Light text */
+        }
+        button {
+            background-color: #00ffff; /* Cyan button */
+            color: #121212; /* Dark text */
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #00cccc; /* Slightly darker cyan */
+        }
+        #responseMessage {
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center; color: #00ffff;">Notify API</h1>
+    <form id="failureForm">
+        <label for="failureType">Select Failure Type:</label>
+        <select id="failureType" name="failureType" required>
+            <option value="failure1">Failure 1</option>
+            <option value="failure2">Failure 2</option>
+            <option value="failure3">Failure 3</option>
+            <option value="failure4">Failure 4</option>
+            <option value="failure5">Failure 5</option>
+        </select>
+
+        <label for="notificationMethod">Select Notification Method:</label>
+        <select id="notificationMethod" name="notificationMethod" required>
+            <option value="email">Email</option>
+            <option value="sms">SMS</option>
+            <option value="both">Both</option>
+        </select>
+
+        <label for="failureDetails">Failure Details:</label>
+        <textarea id="failureDetails" name="failureDetails" rows="5" required></textarea>
+
+        <button type="submit">Send Notification</button>
+    </form>
+
+    <div id="responseMessage" style="margin-top: 20px;"></div>
+
+    <script>
+        document.getElementById('failureForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const failureType = document.getElementById('failureType').value;
+            const notificationMethod = document.getElementById('notificationMethod').value;
+            const failureDetails = document.getElementById('failureDetails').value;
+
+            const responseMessage = document.getElementById('responseMessage');
+            responseMessage.textContent = "Sending notification...";
+
+            try {
+                const response = await fetch('/notify-failure/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        failure_type: failureType,
+                        notification_method: notificationMethod,
+                        failure_details: failureDetails,
+                    }),
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    responseMessage.textContent = result.message;
+                    responseMessage.style.color = "#00ff00"; // Green for success
+                } else {
+                    responseMessage.textContent = result.error || "Failed to send notification.";
+                    responseMessage.style.color = "#ff0000"; // Red for error
+                }
+            } catch (error) {
+                responseMessage.textContent = "An error occurred while sending the notification.";
+                responseMessage.style.color = "#ff0000"; // Red for error
+            }
+        });
+    </script>
+</body>
+</html>
